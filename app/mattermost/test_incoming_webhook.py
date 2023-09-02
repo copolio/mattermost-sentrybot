@@ -4,7 +4,7 @@ from app.mattermost import IncomingWebhook
 
 
 class TestIncomingWebhook(TestCase):
-    def request_deserialize_success(self):
+    def test_request_deserialize_success(self):
         # given
         json_dict = {
             "channel": "town-square",
@@ -16,7 +16,9 @@ class TestIncomingWebhook(TestCase):
                         "**$300,020.00**"
             }
         }
+        # when
         incoming_webhook = IncomingWebhook.model_validate(json_dict)
+        # then
         self.assertEquals(json_dict.get("channel"), incoming_webhook.channel)
         self.assertEquals(json_dict.get("username"), incoming_webhook.username)
         self.assertEquals(json_dict.get("text"), incoming_webhook.text)
