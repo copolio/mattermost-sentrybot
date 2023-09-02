@@ -1,3 +1,3 @@
-from base import Webhook
-from issue_alert import IssueAlertWebhook
-from metric_alert import MetricAlertWebhook
+from app.sentry.base import *
+from app.sentry.issue_alert import *
+from app.sentry.metric_alert import *
