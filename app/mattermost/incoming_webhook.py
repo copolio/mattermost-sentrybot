@@ -4,40 +4,40 @@ from pydantic import BaseModel
 
 
 class Field(BaseModel):
-    title: str
-    value: str
-    short: bool
+    title: str | None = None
+    value: str | None = None
+    short: bool | None = None
 
 
 class Attachment(BaseModel):
     """
     source: https://developers.mattermost.com/integrate/reference/message-attachments/
     """
-    fallback: str
-    color: str
-    pretext: str
-    text: str
-    author_name: str
-    author_link: str
-    author_icon: str
-    title: str
-    title_link: str
-    fields: List[Field]
-    image_url: str
-    thumb_url: str
-    footer: str
-    footer_icon: str
+    fallback: str | None = None
+    color: str | None = None
+    pretext: str | None = None
+    text: str | None = None
+    author_name: str | None = None
+    author_link: str | None = None
+    author_icon: str | None = None
+    title: str | None = None
+    title_link: str | None = None
+    fields: List[Field] | None = None
+    image_url: str | None = None
+    thumb_url: str | None = None
+    footer: str | None = None
+    footer_icon: str | None = None
 
 
 class IncomingWebhook(BaseModel):
     """
     source: https://developers.mattermost.com/integrate/webhooks/incoming/
     """
-    text: str
-    channel: str
-    username: str
-    icon_url: str
-    icon_emoji: str
-    attachments: Attachment
-    type: str
-    props: object
+    text: str | None = None
+    channel: str | None = None
+    username: str | None = None
+    icon_url: str | None = None
+    icon_emoji: str | None = None
+    attachments: Attachment | None = None
+    type: str | None = None
+    props: object | None = None
