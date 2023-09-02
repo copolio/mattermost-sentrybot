@@ -1,0 +1,11 @@
+POST /hooks/xxx-generatedkey-xxx HTTP/1.1
+Host: your-mattermost-server.com
+Content-Type: application/json
+Content-Length: 630
+
+{
+  "channel": "town-square",
+  "username": "test-automation",
+  "icon_url": "https://mattermost.com/wp-content/uploads/2022/02/icon.png",
+  "text": "#### Test results for July 27th, 2017\n@channel please review failed tests.\n\n| Component  | Tests Run   | Tests Failed                                   |\n|:-----------|:-----------:|:-----------------------------------------------|\n| Server     | 948         | ✅ 0                           |\n| Web Client | 123         | ⚠️ 2 [(see details)](https://linktologs) |\n| iOS Client | 78          | ⚠️ 3 [(see details)](https://linktologs) |"
+}
