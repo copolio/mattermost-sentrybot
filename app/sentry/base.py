@@ -1,4 +1,11 @@
+from enum import Enum
+
 from pydantic import BaseModel
+
+
+class AlertType(str, Enum):
+    Issue = "event_alert",
+    Metric = "metric_alert"
 
 
 class Actor(BaseModel):

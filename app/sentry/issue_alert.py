@@ -4,10 +4,14 @@ from app import sentry
 
 
 class Event(BaseModel):
+    title: str | None = None
     url: str | None = None
     web_url: str | None = None
     issue_url: str | None = None
     issue_id: str | None = None
+    culprit: str | None = None
+    environment: str | None = None
+    project_slug: str | None = None
 
 
 class IssueAlert(BaseModel):
