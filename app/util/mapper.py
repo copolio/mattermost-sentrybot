@@ -5,7 +5,11 @@ from app import mattermost, sentry
 
 class WebhookMapper:
     @staticmethod
-    def map_issue_alert(destination: str, request: sentry.IssueAlertWebhook) -> mattermost.IncomingWebhook:
+    def map_issue_alert(
+            destination: str,
+            request: sentry.IssueAlertWebhook,
+            icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
+    ) -> mattermost.IncomingWebhook:
         return mattermost.IncomingWebhook(
             channel=destination,
             attachments=mattermost.Attachment(
@@ -13,7 +17,7 @@ class WebhookMapper:
                 fallback=request.data.event.title,
                 color="#FF0000",
                 author_name="Sentry",
-                author_icon="https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png",
+                author_icon=icon_path,
                 title_link=request.data.event.url,
                 fields=[
                     mattermost.Field(
