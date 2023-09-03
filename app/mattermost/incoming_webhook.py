@@ -38,6 +38,6 @@ class IncomingWebhook(BaseModel):
     username: str | None = None
     icon_url: str | None = None
     icon_emoji: str | None = None
-    attachments: Attachment | None = None
+    attachments: List[Attachment] | None = None
     type: str | None = None
     props: object | None = None

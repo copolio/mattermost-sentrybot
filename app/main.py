@@ -1,11 +1,11 @@
 import sentry_sdk
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.requests import Request
-from fastapi.responses import RedirectResponse, ORJSONResponse
+from fastapi.responses import RedirectResponse, ORJSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from httpx import AsyncClient
 
-from app import sentry, util
+from app import sentry, util, mattermost
 
 sentry_sdk.init(
     dsn="https://56767ee665c731ed4a9b49f80c9b6911@o4503912623767552.ingest.sentry.io/4505793993441280",
@@ -55,8 +55,7 @@ async def hooks(
 
     if sentry_hook_resource == sentry.AlertType.Issue:
         issue_alert_webhook = sentry.IssueAlertWebhook.model_validate(sentry_webhook.model_dump())
-        mattermost_webhook = util.WebhookMapper.map_issue_alert(
-            destination=mattermost_host,
+        mattermost_webhook: mattermost.IncomingWebhook = util.WebhookMapper.map_issue_alert(
             request=issue_alert_webhook,
             icon_path=icon_path,
         )
@@ -70,6 +69,12 @@ async def hooks(
     protocol = "https://" if use_https else "http://"
     response = await client.post(
         url=protocol + mattermost_host + "/hooks/" + key,
-        data=mattermost_webhook.model_dump())
+        json=mattermost_webhook.model_dump())
 
-    return ORJSONResponse(content=response.json(), status_code=response.status_code)
+    if response.is_success:
+        sentry_response = PlainTextResponse(content=response.content,
+                                            status_code=response.status_code)
+    else:
+        sentry_response = ORJSONResponse(content=response.json(),
+                                         status_code=response.status_code)
+    return sentry_response
