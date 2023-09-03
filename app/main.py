@@ -1,4 +1,3 @@
-import sentry_sdk
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.requests import Request
 from fastapi.responses import RedirectResponse, ORJSONResponse, PlainTextResponse
@@ -6,18 +5,6 @@ from fastapi.staticfiles import StaticFiles
 from httpx import AsyncClient
 
 from app import sentry, util, mattermost
-
-sentry_sdk.init(
-    dsn="https://56767ee665c731ed4a9b49f80c9b6911@o4503912623767552.ingest.sentry.io/4505793993441280",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1.0,
-)
 
 app = FastAPI(
     title="Sentry Mattermost Proxy",
