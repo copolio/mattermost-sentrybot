@@ -13,7 +13,7 @@ class WebhookMapper:
                 mattermost.Attachment(
                     text=request.data.event.title + "@" + request.data.event.culprit,
                     title=request.data.event.title,
-                    fallback="Issue Alert reported by Sentry: " + request.data.actor.name,
+                    fallback="Issue Alert reported by Sentry: " + request.actor.name,
                     color="#FF0000",
                     author_name="Sentry",
                     author_icon=icon_path,
@@ -64,7 +64,7 @@ class WebhookMapper:
             username=request.actor.name,
             attachments=[
                 mattermost.Attachment(
-                    text=request.data.description_text,
+                    text=request.data.description_text.replace("\\n", "\n"),
                     title=request.data.description_title,
                     fallback="Metric Alert reported by Sentry: " + request.actor.name,
                     color="#ffff00",
