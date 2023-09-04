@@ -4,7 +4,7 @@ from fastapi.responses import RedirectResponse, ORJSONResponse, PlainTextRespons
 from fastapi.staticfiles import StaticFiles
 from httpx import AsyncClient
 
-from app import sentry, util, mattermost
+from app import sentry, util
 
 app = FastAPI(
     title="Sentry Mattermost Proxy",
@@ -42,14 +42,16 @@ async def hooks(
 
     if sentry_hook_resource == sentry.AlertType.Issue:
         issue_alert_webhook = sentry.IssueAlertWebhook.model_validate(sentry_webhook.model_dump())
-        mattermost_webhook: mattermost.IncomingWebhook = util.WebhookMapper.map_issue_alert(
+        mattermost_webhook = util.WebhookMapper.map_issue_alert(
             request=issue_alert_webhook,
             icon_path=icon_path,
         )
     elif sentry_hook_resource == sentry.AlertType.Metric:
-        # TODO
-        raise HTTPException(status_code=501, detail="Currently Unsupported")
-        # request = util.WebhookMapper.map_metric_alert(cast(sentry.MetricAlertWebhook, sentry_webhook))
+        metric_alert_webhook = sentry.MetricAlertWebhook.model_validate(sentry_webhook.model_dump())
+        mattermost_webhook = util.WebhookMapper.map_metric_alert(
+            request=metric_alert_webhook,
+            icon_path=icon_path
+        )
     else:
         raise HTTPException(status_code=400, detail="Invalid hook resource")
 

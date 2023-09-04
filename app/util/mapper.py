@@ -1,5 +1,3 @@
-from fastapi import HTTPException
-
 from app import mattermost, sentry
 
 
@@ -10,12 +8,12 @@ class WebhookMapper:
             icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
     ) -> mattermost.IncomingWebhook:
         return mattermost.IncomingWebhook(
-            username="Sentry",
+            username=request.actor.name,
             attachments=[
                 mattermost.Attachment(
                     text=request.data.event.title + "@" + request.data.event.culprit,
                     title=request.data.event.title,
-                    fallback="Error reported by Sentry: " + request.data.event.title,
+                    fallback="Issue Alert reported by Sentry: " + request.data.actor.name,
                     color="#FF0000",
                     author_name="Sentry",
                     author_icon=icon_path,
@@ -53,11 +51,39 @@ class WebhookMapper:
                             value=request.data.event.metadata.filename,
                         ),
                     ],
-                ),
+                )
             ]
         )
 
     @staticmethod
-    def map_metric_alert(destination: str, request: sentry.MetricAlertWebhook) -> mattermost.IncomingWebhook:
-        # TODO
-        raise HTTPException(status_code=501, detail="Currently Unsupported")
+    def map_metric_alert(
+            request: sentry.MetricAlertWebhook,
+            icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
+    ) -> mattermost.IncomingWebhook:
+        return mattermost.IncomingWebhook(
+            username=request.actor.name,
+            attachments=[
+                mattermost.Attachment(
+                    text=request.data.description_text,
+                    title=request.data.description_title,
+                    fallback="Metric Alert reported by Sentry: " + request.actor.name,
+                    color="#ffff00",
+                    author_name="Sentry",
+                    author_icon=icon_path,
+                    author_link="test_link",
+                    title_link=request.data.web_url,
+                    fields=[
+                        mattermost.Field(
+                            short=True,
+                            title="Alert Title",
+                            value=request.data.metric_alert.alert_rule.name,
+                        ),
+                        mattermost.Field(
+                            short=True,
+                            title="Projects",
+                            value=", ".join(request.data.metric_alert.alert_rule.projects),
+                        ),
+                    ],
+                ),
+            ]
+        )

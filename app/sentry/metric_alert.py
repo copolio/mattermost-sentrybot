@@ -11,6 +11,8 @@ class Trigger(BaseModel):
 
 class AlertRule(BaseModel):
     triggers: List[Trigger] | None = None
+    name: str | None = None
+    projects: List[str] | None = None
 
 
 class MetricAlert(BaseModel):
@@ -18,10 +20,10 @@ class MetricAlert(BaseModel):
 
 
 class Data(BaseModel):
-    description_text: str
-    description_title: str
-    metric_alert: MetricAlert
-    web_url: str
+    description_text: str | None = None
+    description_title: str | None = None
+    metric_alert: MetricAlert | None = None
+    web_url: str | None = None
 
 
 class MetricAlertWebhook(sentry.Webhook):
