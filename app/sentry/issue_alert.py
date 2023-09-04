@@ -3,6 +3,13 @@ from pydantic import BaseModel
 from app import sentry
 
 
+class MetaData(BaseModel):
+    filename: str | None = None
+    type: str | None = None
+    value: str | None = None
+    function: str | None = None
+
+
 class Event(BaseModel):
     title: str | None = None
     url: str | None = None
@@ -12,6 +19,9 @@ class Event(BaseModel):
     culprit: str | None = None
     environment: str | None = None
     project_slug: str | None = None
+    project: int | None = None
+    platform: str | None = None
+    metadata: MetaData | None = None
 
 
 class IssueAlert(BaseModel):
