@@ -1,6 +1,5 @@
 # Sentry Mattermost Proxy
 
----
 A proxy server for integrating Sentry 21 alerts into Incoming Webhooks on Mattermost.
 
 ## Overview
