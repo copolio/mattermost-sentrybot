@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from app.sentry import IssueAlertWebhook
+from app.sentry import EventAlertWebhook
 
 
 class TestIssueAlertWebhook(TestCase):
@@ -228,7 +228,7 @@ class TestIssueAlertWebhook(TestCase):
             }
         }
         # when
-        issue_alert_webhook = IssueAlertWebhook.model_validate(json_dict)
+        issue_alert_webhook = EventAlertWebhook.model_validate(json_dict)
         # then
         self.assertEquals(json_dict.get("action"), issue_alert_webhook.action)
 

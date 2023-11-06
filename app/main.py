@@ -31,8 +31,8 @@ async def hooks(
         sentry_webhook: sentry.Webhook,
         request: Request,
         use_https: bool = False,
-        sentry_hook_resource: sentry.AlertType = Header(default=sentry.AlertType.Issue,
-                                                        alias="Sentry-Hook-Resource"),
+        sentry_hook_resource: sentry.SentryHookResource = Header(default=sentry.SentryHookResource.EVENT,
+                                                                 alias="Sentry-Hook-Resource"),
 ):
     """
     Use this endpoint to send a Sentry webhook payload to be processed and forwarded to Mattermost.
@@ -40,20 +40,24 @@ async def hooks(
     url = request.url
     icon_path = url.scheme + "://" + url.netloc + "/static/images/thumbnail.png"
 
-    if sentry_hook_resource == sentry.AlertType.Issue:
-        issue_alert_webhook = sentry.IssueAlertWebhook.model_validate(sentry_webhook.model_dump())
-        mattermost_webhook = util.WebhookMapper.map_issue_alert(
+    if sentry_hook_resource == sentry.SentryHookResource.EVENT:
+        issue_alert_webhook = sentry.EventAlertWebhook.model_validate(sentry_webhook.model_dump())
+        mattermost_webhook = util.WebhookMapper.map_event_alert(
             request=issue_alert_webhook,
             icon_path=icon_path,
         )
-    elif sentry_hook_resource == sentry.AlertType.Metric:
+    elif sentry_hook_resource == sentry.SentryHookResource.METRIC:
         metric_alert_webhook = sentry.MetricAlertWebhook.model_validate(sentry_webhook.model_dump())
         mattermost_webhook = util.WebhookMapper.map_metric_alert(
             request=metric_alert_webhook,
             icon_path=icon_path
         )
     else:
-        raise HTTPException(status_code=400, detail="Invalid hook resource")
+        mattermost_webhook = util.WebhookMapper.map_default(
+            request=request,
+            subject=sentry_hook_resource,
+            icon_path=icon_path
+        )
 
     protocol = "https://" if use_https else "http://"
     response = await client.post(

@@ -3,12 +3,12 @@ from app import mattermost, sentry
 
 class WebhookMapper:
     @staticmethod
-    def map_issue_alert(
-            request: sentry.IssueAlertWebhook,
+    def map_event_alert(
+            request: sentry.EventAlertWebhook,
             icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
     ) -> mattermost.IncomingWebhook:
         return mattermost.IncomingWebhook(
-            username=request.actor.name,
+            username="Sentry",
             attachments=[
                 mattermost.Attachment(
                     text=request.data.event.title + "@" + request.data.event.culprit,
@@ -17,8 +17,7 @@ class WebhookMapper:
                     color="#FF0000",
                     author_name="Sentry",
                     author_icon=icon_path,
-                    author_link="test_link",
-                    title_link=request.data.event.issue_url,
+                    title_link=request.data.event.web_url,
                     fields=[
                         mattermost.Field(
                             short=True,
@@ -61,7 +60,7 @@ class WebhookMapper:
             icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
     ) -> mattermost.IncomingWebhook:
         return mattermost.IncomingWebhook(
-            username=request.actor.name,
+            username="Sentry",
             attachments=[
                 mattermost.Attachment(
                     text=request.data.description_text.replace("\\n", "\n"),
@@ -70,7 +69,6 @@ class WebhookMapper:
                     color="#ffff00",
                     author_name="Sentry",
                     author_icon=icon_path,
-                    author_link="test_link",
                     title_link=request.data.web_url,
                     fields=[
                         mattermost.Field(
@@ -87,3 +85,33 @@ class WebhookMapper:
                 ),
             ]
         )
+
+
+@staticmethod
+def map_default(
+        request: sentry.Webhook,
+        subject: sentry.SentryHookResource,
+        icon_path: str = "https://assets.stickpng.com/images/58482eedcef1014c0b5e4a76.png"
+) -> mattermost.IncomingWebhook:
+    if "web_url" in request.data.keys():
+        web_url = request.data["web_url"]
+    elif "web_url" in request.data[subject].keys():
+        web_url = request.data[subject]["web_url"]
+    else:
+        web_url = ""
+    return mattermost.IncomingWebhook(
+        username="Sentry",
+        attachments=[
+            mattermost.Attachment(
+                text=str.format("%subject %action by %name",
+                                subject=subject,
+                                action=request.action,
+                                name=request.actor.name),
+                title=request.data["title"],
+                color="#4cb9fa",
+                author_name="Sentry",
+                author_icon=icon_path,
+                title_link=web_url,
+            ),
+        ]
+    )

@@ -15,11 +15,11 @@ class Event(BaseModel):
     url: str | None = None
     web_url: str | None = None
     issue_url: str | None = None
-    issue_id: str | None = None
+    issue_id: str | int | None = None
     culprit: str | None = None
     environment: str | None = None
     project_slug: str | None = None
-    project: int | None = None
+    project: str | int | None = None
     platform: str | None = None
     metadata: MetaData | None = None
 
@@ -35,7 +35,7 @@ class Data(BaseModel):
     triggered_rule: str | None = None
 
 
-class IssueAlertWebhook(sentry.Webhook):
+class EventAlertWebhook(sentry.Webhook):
     """
     source: https://docs.sentry.io/product/integrations/integration-platform/webhooks/issue-alerts/
     """
