@@ -1,3 +1,5 @@
+import string
+
 from app import mattermost, sentry
 
 
@@ -11,7 +13,7 @@ class WebhookMapper:
             username="Sentry",
             attachments=[
                 mattermost.Attachment(
-                    text=request.data.event.title + "@" + request.data.event.culprit,
+                    text=request.data.event.metadata.value or request.data.event.title,
                     title=request.data.event.title,
                     fallback="Issue Alert reported by Sentry: " + request.actor.name,
                     color="#FF0000",
@@ -103,11 +105,11 @@ def map_default(
         username="Sentry",
         attachments=[
             mattermost.Attachment(
-                text=str.format("%subject %action by %name",
-                                subject=subject,
-                                action=request.action,
-                                name=request.actor.name),
-                title=request.data["title"],
+                text=request.data[subject]["title"] + "@" + request.data[subject]["culprit"],
+                title=string.Template("$type $action by: $name").substitute(type=subject.value,
+                                                                            action=request.action,
+                                                                            name=request.actor.name)
+                ,
                 color="#4cb9fa",
                 author_name="Sentry",
                 author_icon=icon_path,
