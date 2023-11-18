@@ -1,12 +1,9 @@
-# Sentry Mattermost Proxy
+# Mattermost Sentrybot
 
-A proxy server for integrating Sentry 21 alerts into Incoming Webhooks on Mattermost.
-
-## Overview
-
-- This project is a proxy server designed to seamlessly integrate Sentry 21 alerts into Incoming Webhooks on Mattermost,
-  a popular team collaboration platform. With this proxy server, you can receive real-time alerts from Sentry 21
-  directly into your Mattermost channels, keeping your team informed and enabling swift response to critical issues.
+Mattermost Sentrybot is a bot for the Mattermost platform designed to seamlessly integrate Sentry 21 alerts into Incoming Webhooks on Mattermost,
+a popular team collaboration platform. With Sentrybot, you can receive real-time alerts from Sentry 21 
+directly into your Mattermost channels, keeping your team informed and enabling swift response to critical issues.
+Sentrybot helps monitor your Sentry notifications in Mattermost channels, ensuring a smooth and secure communication environment.
 
 ## Table of Contents
 
@@ -25,7 +22,7 @@ Follow these steps to set up the Sentry 21 to Mattermost Proxy Server:
 - Clone the repository
 
 ```sh
-git clone https://github.com/copolio/sentry-mattermost-proxy.git
+git clone https://github.com/copolio/mattermost-sentrybot.git
 ```
 
 - Deploy FastAPI application
@@ -33,15 +30,15 @@ git clone https://github.com/copolio/sentry-mattermost-proxy.git
 Dockerfile is provided in the repository for your convenience.
 
 ```sh
-docker build -t sentry-mattermost-proxy .
-docker run -d --name sentry-mattermost-proxy -p 80:80 sentry-mattermost-proxy
+docker build -t mattermost-sentrybot .
+docker run -d --name mattermost-sentrybot -p 80:80 mattermost-sentrybot
 ```
 
 Your Sentry 21 to Mattermost proxy server is now running and ready to forward alerts to Mattermost.
 
 ## [Usage](#usage)
 
-Once the proxy server is operational, configuring Sentry 21 to send alerts is a breeze:
+Once the bot is operational, configuring Sentry 21 to send alerts is a breeze:
 
 1. Create an Incoming Webhook URL in your Mattermost instance.
 
@@ -50,7 +47,7 @@ Once the proxy server is operational, configuring Sentry 21 to send alerts is a 
 
 3. Specify custom alert rules with the webhook URL in Sentry 21's alerting settings.
 
-The proxy server will seamlessly relay these alerts to the designated Mattermost channel.
+Then Sentrybot will seamlessly relay these alerts to the designated Mattermost channel.
 
 ## [Contributing](#contributing)
 
